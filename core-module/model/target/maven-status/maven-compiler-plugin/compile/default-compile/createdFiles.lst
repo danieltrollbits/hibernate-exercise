@@ -1,0 +1,6 @@
+com/training/hibernate/model/Gender.class
+com/training/hibernate/model/Address.class
+com/training/hibernate/model/Type.class
+com/training/hibernate/model/Role.class
+com/training/hibernate/model/Contact.class
+com/training/hibernate/model/Person.class
