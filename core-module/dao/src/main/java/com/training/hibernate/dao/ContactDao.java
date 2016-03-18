@@ -4,25 +4,14 @@ import com.training.hibernate.model.*;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.SessionFactory;
 import org.hibernate.Query;
-import org.hibernate.cfg.Configuration;
 import java.util.*;
+import com.training.hibernate.util.HibernateUtil;
 
 public class ContactDao {
-	SessionFactory factory = null;
-
-	public ContactDao(){
-		try{
-			this.factory = new Configuration().configure().buildSessionFactory();
-		}catch (Throwable ex) {
-			System.err.println("Failed to create sessionFactory object." + ex);
-			throw new ExceptionInInitializerError(ex);
-		}
-	}
 
 	public void deleteContactById(int id){
-		Session session = factory.openSession();
+		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tx = session.beginTransaction();
@@ -40,7 +29,7 @@ public class ContactDao {
 
 	public Set<Contact> getContactsByPersonId(int personId){
 		List<Contact> contacts = new ArrayList<>();
-		Session session = factory.openSession();
+		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tx = session.beginTransaction();

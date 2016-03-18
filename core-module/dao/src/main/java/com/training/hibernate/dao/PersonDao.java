@@ -4,30 +4,17 @@ import com.training.hibernate.model.*;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.SessionFactory;
 import org.hibernate.Query;
-import org.hibernate.cfg.Configuration;
-import com.training.hibernate.dao.AddressDao;
+import com.training.hibernate.util.HibernateUtil;
 
 import java.util.*;
 import java.io.*;
 
 public class PersonDao {
-	SessionFactory factory = null;
-	AddressDao addressDao = new AddressDao();
-
-	public PersonDao(){
-		try{
-			this.factory = new Configuration().configure().buildSessionFactory();
-		}catch (Throwable ex) {
-			System.err.println("Failed to create sessionFactory object." + ex);
-			throw new ExceptionInInitializerError(ex);
-		}
-	}
 
 	public List<Person> getAllPersons(){
-		Session session = factory.openSession();
-		Transaction tx = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = null;
 		List<Person> persons = new ArrayList<>(); 
 		try{
 			tx = session.beginTransaction();
@@ -41,7 +28,7 @@ public class PersonDao {
 	}
 
 	public Person getPersonById(int id) {
-		Session session = factory.openSession();
+		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
 		Person person = null;
 		try{
@@ -60,7 +47,7 @@ public class PersonDao {
 
 	public List<Person> getPersonByLastName(String name){
 		List<Person> persons = new ArrayList<>();
-		Session session = factory.openSession();
+		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tx = session.beginTransaction();
@@ -76,9 +63,9 @@ public class PersonDao {
 		return persons;
 	}
 
-	public Person addPerson(Person person) {
+	public void addPerson(Person person) {
 		Transaction transaction = null;
-		Session session = factory.openSession();
+		Session session = HibernateUtil.getSessionFactory().openSession();
 		try{
 			transaction = session.beginTransaction();
 			session.save(person);
@@ -92,28 +79,26 @@ public class PersonDao {
 			session.flush();
 			session.close();
 		}
-		return person;
 	}
 
-	public void updatePersonLastName(int id, String lastName){
-		Session session = factory.openSession();
+	public void updatePerson(Person person){
+		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tx = session.beginTransaction();
-			Person person = (Person)session.get(Person.class, id);
-			person.setLastName( lastName );
 			session.update(person);
 			tx.commit();
 		}catch (HibernateException e) {
 			if (tx!=null) tx.rollback();
 			e.printStackTrace();
 		}finally {
+			session.flush();
 			session.close();
 		}
 	}
 
 	public void deletePersonById(int id){
-		Session session = factory.openSession();
+		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tx = session.beginTransaction();
@@ -129,7 +114,7 @@ public class PersonDao {
 	}
 
 	public void updatePersonContact(int id, Contact contact){
-		Session session = factory.openSession();
+		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tx = session.beginTransaction();

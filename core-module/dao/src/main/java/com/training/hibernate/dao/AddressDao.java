@@ -4,24 +4,13 @@ import com.training.hibernate.model.*;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.SessionFactory;
 import org.hibernate.Query;
-import org.hibernate.cfg.Configuration;
+import com.training.hibernate.util.HibernateUtil;
 
 public class AddressDao {
-	SessionFactory factory = null;
-
-	public AddressDao(){
-		try{
-			this.factory = new Configuration().configure().buildSessionFactory();
-		}catch (Throwable ex) {
-			System.err.println("Failed to create sessionFactory object." + ex);
-			throw new ExceptionInInitializerError(ex);
-		}
-	}
 
 	public Address addAddress(Address address) {
-		Session session = factory.openSession();
+		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tx = session.beginTransaction();
@@ -39,7 +28,7 @@ public class AddressDao {
 
 	public Address getAddressById(int id){
 		Address address = null;
-		Session session = factory.openSession();
+		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tx = session.beginTransaction();
@@ -57,7 +46,7 @@ public class AddressDao {
 	}
 
 	public void updateAddress(Address address) {
-		Session session = factory.openSession();
+		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
 		try{
 			tx = session.beginTransaction();

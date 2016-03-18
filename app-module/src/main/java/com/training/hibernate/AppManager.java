@@ -18,7 +18,7 @@ public class AppManager {
 		System.out.println(String.format("%-34s%1s","|4. Show contacts of a person","|"));
 		System.out.println(String.format("%-34s%1s","|5. Add person","|"));
 		System.out.println(String.format("%-34s%1s","|6. Add contact of a person","|"));
-		System.out.println(String.format("%-34s%1s","|7. Update person last name","|"));
+		System.out.println(String.format("%-34s%1s","|7. Update person","|"));
 		System.out.println(String.format("%-34s%1s","|8. Update address of a person","|"));
 		System.out.println(String.format("%-34s%1s","|9. Delete person","|"));
 		System.out.println(String.format("%-34s%1s","|10. Delete contact of a person","|"));
@@ -42,9 +42,9 @@ public class AppManager {
 
 	public void getAddressById(){
 		Scanner in = new Scanner(System.in);
-		System.out.print("Id of person... ");
+		System.out.print("Person id --> ");
 		while(!in.hasNextInt()){
-			System.out.print("Invalid... ");
+			System.out.print("Please enter valid id --> ");
 			in.next();
 		}
 		int id = in.nextInt();
@@ -54,9 +54,9 @@ public class AppManager {
 
 	public void getContactsByPersonId(){
 		Scanner in = new Scanner(System.in);
-		System.out.print("Person id... ");
+		System.out.print("Person id --> ");
 		while(!in.hasNextInt()){
-			System.out.print("Invalid... ");
+			System.out.print("Please enter valid id --> ");
 			in.next();
 		}
 		int id = in.nextInt();
@@ -64,36 +64,36 @@ public class AppManager {
 		contactsGui(contacts);
 	} 
 
-	public void addPerson(){
+	public Person createPerson(){
 		boolean isEmployed;
 		Scanner in = new Scanner(System.in);
-		System.out.print("Last name... ");
-		String lastName = in.nextLine();
-		System.out.print("First name... ");
+		System.out.print("First name --> ");
 		String firstName = in.nextLine();
-		System.out.print("Middle name... ");
+		System.out.print("Middle name --> ");
 		String middleName = in.nextLine();
-		System.out.print("Gender M/F... ");
+		System.out.print("Last name --> ");
+		String lastName = in.nextLine();
+		System.out.print("Gender M/F --> ");
 		while(!in.hasNext("[mfMF]$")){
-			System.out.print("Invalid... ");
+			System.out.print("m/f only --> ");
 			in.nextLine();
 		}
 		String gender = in.nextLine();
-		System.out.print("Birthdate dd/mm/yyyy... ");
+		System.out.print("Birthdate dd/mm/yyyy --> ");
 		while(!in.hasNext("(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)$")){
-			System.out.print("Invalid... ");
+			System.out.print("Please enter valid date format --> ");
 			in.nextLine();
 		}
 		String birthDate = in.nextLine();
-		System.out.print("Employed? y/n... ");
+		System.out.print("Employed? y/n --> ");
 		while(!in.hasNext("[ynYN]$")){
-			System.out.print("Invalid... ");
+			System.out.print("y/n only --> ");
 			in.nextLine();
 		}
 		String employed = in.nextLine();
-		System.out.print("GWA... ");
+		System.out.print("GWA --> ");
 		while(!in.hasNext("(\\d+\\.)?\\d+$")){
-			System.out.print("Invalid... ");
+			System.out.print("Please enter valid gwa --> ");
 			in.nextLine();
 		}
 		String gwa = in.nextLine();
@@ -107,64 +107,56 @@ public class AppManager {
 		if(employed.equalsIgnoreCase("y")) isEmployed = true;
 		else isEmployed = false;
 		
-		// construct person
-		Address address = addAddress();
-		Set<Contact> contacts = addContacts();
-		Person person = new Person(lastName, firstName, middleName, convertToGenderEnum(gender), date, address, isEmployed,
-			Float.parseFloat(gwa), contacts, Role.USER);
-		for (Contact c : contacts){
-			c.setPerson(person);
-		}
-		person.setContacts(contacts);
-		savePerson(person);
+		return new Person(lastName, firstName, middleName, convertToGenderEnum(gender), date, null, isEmployed,
+			Float.parseFloat(gwa), null, Role.USER);
 	}
 
-	public Address addAddress(){
+	public Address createAddress(){
 		Scanner in = new Scanner(System.in);
 		System.out.println("Address ============================= ");
-		System.out.print("Street... ");
+		System.out.print("Street --> ");
 		String street = in.nextLine();
-		System.out.print("House number... ");
+		System.out.print("House number --> ");
 		while(!in.hasNext("\\d+$")){
-			System.out.print("Invalid... ");
+			System.out.print("Numbers only --> ");
 			in.nextLine();
 		}
 		String houseNo = in.nextLine();
-		System.out.print("Barangay... ");
+		System.out.print("Barangay --> ");
 		String brgy = in.nextLine().trim();
-		System.out.print("Subdivision... ");
+		System.out.print("Subdivision --> ");
 		String subd = in.nextLine().trim();
-		System.out.print("City... ");
+		System.out.print("City --> ");
 		String city = in.nextLine().trim();
-		System.out.print("Zip code... ");
+		System.out.print("Zip code --> ");
 		String zipCode = in.nextLine().trim();
 		return new Address(street, Integer.parseInt(houseNo), brgy, subd, city, zipCode);
 	}
 
-	public Contact addContact(){
+	public Contact createContact(){
 		Scanner in  = new Scanner(System.in);
 		System.out.println("Contact number =============================");
 		Contact contact = new Contact();
-		System.out.print("Mobile or phone? m/p... ");
+		System.out.print("Mobile or phone? m/p --> ");
 		while(!in.hasNext("[mpMP]$")){
-			System.out.print("Invalid... ");
+			System.out.print("m/p only --> ");
 			in.nextLine();
 		}
 		contact.setType(convertToTypeEnum(in.nextLine()));
-		System.out.print("Number... ");
+		System.out.print("Number --> ");
 		contact.setValue(in.nextLine().trim());
 		return contact;
 	}
 
-	public Set<Contact> addContacts(){
+	public Set<Contact> createContacts(){
 		Scanner in = new Scanner(System.in);
 		boolean isAddContact = true;
 		Set<Contact> contacts = new HashSet<>();
 		while(isAddContact){
-			contacts.add(addContact());
-			System.out.print("Do you want to add another contact? y/n... ");
+			contacts.add(createContact());
+			System.out.print("Do you want to add another contact? y/n --> ");
 			while(!in.hasNext("[yYnN]$")){
-				System.out.print("Invalid... ");
+				System.out.print("y/n only --> ");
 				in.nextLine();
 			}
 			if(in.hasNext("[yY]$")){
@@ -178,74 +170,202 @@ public class AppManager {
 		return contacts;
 	}
 
-	public void addContactByPersonId(){
-		Scanner in = new Scanner(System.in);
-		System.out.print("Person id... ");
-		while(!in.hasNextInt()){
-			System.out.print("Invalid... ");
-			in.next();
+	public void addPerson(){
+		Person person = createPerson();
+		Address address = createAddress();
+		Set<Contact> contacts = createContacts();
+		for (Contact c : contacts){
+			c.setPerson(person);
 		}
-		int id = in.nextInt();
-		Contact contact = addContact();
-		managePersonService.updatePersonContact(id, contact);
+		person.setAddress(address);
+		person.setContacts(contacts);
+		managePersonService.addPerson(person);
+		System.out.println("Person added");
 	}
 
-	public void updatePersonLastName(){
+	public void addContactByPersonId(){
 		Scanner in = new Scanner(System.in);
-		System.out.print("Person id... ");
-		String name;
+		System.out.print("Person id --> ");
 		while(!in.hasNextInt()){
-			System.out.print("Invalid... ");
+			System.out.print("Please enter valid id --> ");
 			in.next();
 		}
 		int id = in.nextInt();
-		System.out.print("New last name... ");
-		name = in.next();
-		managePersonService.updatePersonLastName(id,name);
+		Contact contact = createContact();
+		managePersonService.updatePersonContact(id, contact);
+		System.out.println("Contact added succesfully");
+	}
+
+	public Person createUpdatePerson(Person person){
+		boolean isEmployed;
+		Scanner in = new Scanner(System.in);
+		System.out.print("First name --> ");
+		String firstName = in.nextLine();
+		System.out.print("Middle name --> ");
+		String middleName = in.nextLine();
+		System.out.print("Last name --> ");
+		String lastName = in.nextLine();
+		System.out.print("Gender M/F --> ");
+		String gender;
+		do{
+        	gender = in.nextLine();
+       		if(!(gender.matches("[mMfF]$")||gender.isEmpty())){
+            	System.out.print("m/f only --> ");
+        	}
+    	}while(!(gender.matches("[mMfF]$")||gender.isEmpty()));
+
+		System.out.print("Birthdate dd/mm/yyyy --> ");
+		String birthdate;
+		do{
+        	birthdate = in.nextLine();
+       		if(!(birthdate.matches("(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)$")||birthdate.isEmpty())){
+            	System.out.println("Please enter valid date --> ");
+        	}
+    	}while(!(birthdate.matches("(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)$")||birthdate.isEmpty()));
+		String employed;
+		System.out.print("Employed? y/n --> ");
+		do{
+        	employed = in.nextLine();
+       		if(!(employed.matches("[ynYN]$")||employed.isEmpty())){
+            	System.out.println("Please choose y/n only --> ");
+        	}
+    	}while(!(employed.matches("[ynYN]$")||employed.isEmpty()));
+		System.out.print("GWA --> ");
+		String gwa;
+		do{
+        	gwa = in.nextLine();
+       		if(!(gwa.matches("(\\d+\\.)?\\d+$")||gwa.isEmpty())){
+            	System.out.println("Please choose m/f only --> ");
+        	}
+    	}while(!(gwa.matches("(\\d+\\.)?\\d+$")||gwa.isEmpty()));
+		
+		if(!lastName.isEmpty()) person.setLastName(lastName);
+		if(!firstName.isEmpty()) person.setFirstName(firstName);
+		if(!middleName.isEmpty()) person.setMiddleName(middleName);
+		if(!gender.isEmpty()) person.setGender(convertToGenderEnum(gender));
+		if(!birthdate.isEmpty()){
+			DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+			Date date = null;
+			try{
+				date = df.parse(birthdate);
+			}catch(ParseException e){
+				e.printStackTrace();
+			}
+			person.setBirthdate(date);	
+		}
+		if(!employed.isEmpty()){
+			if(employed.equalsIgnoreCase("y")) isEmployed = true;
+			else isEmployed = false;
+			person.setEmployed(isEmployed);
+		}
+		if(!gwa.isEmpty()) person.setGwa(Float.parseFloat(gwa));
+		return person;
+	}
+
+	public Address createUpdateAddress(Person person){
+		Address address = person.getAddress();
+		String houseNo;
+		Scanner in = new Scanner(System.in);
+		System.out.println("Address ============================= ");
+		System.out.print("Street --> ");
+		String street = in.nextLine();
+		System.out.print("House number --> ");
+		do{
+        	houseNo = in.nextLine();
+       		if(!(houseNo.matches("\\d+$")||houseNo.isEmpty())){
+            	System.out.print("Numbers only --> ");
+        	}
+    	}while(!(houseNo.matches("\\d+$")||houseNo.isEmpty()));
+		System.out.print("Barangay --> ");
+		String brgy = in.nextLine().trim();
+		System.out.print("Subdivision --> ");
+		String subd = in.nextLine().trim();
+		System.out.print("City --> ");
+		String city = in.nextLine().trim();
+		System.out.print("Zip code --> ");
+		String zipCode = in.nextLine().trim();
+		if (!street.isEmpty()) address.setStreet(street);
+		if (!houseNo.isEmpty()) address.setHouseNo(Integer.parseInt(houseNo));
+		if (!brgy.isEmpty()) address.setBarangay(brgy);
+		if (!subd.isEmpty()) address.setSubdivision(subd);
+		if (!city.isEmpty()) address.setCity(city);
+		if (!zipCode.isEmpty()) address.setZipCode(zipCode);
+		return address;	
+	}
+
+	public void updatePerson(){
+		Scanner in = new Scanner(System.in);
+		System.out.print("Person id --> ");
+		String name;
+		while(!in.hasNextInt()){
+			System.out.print("Please enter valid id --> ");
+			in.next();
+		}
+		int id = in.nextInt();
+		System.out.println("Press enter to retain old value.");
+		Person person = managePersonService.getPersonById(id);
+		Person updatedPerson = createUpdatePerson(person);
+		System.out.print("Do you want to update Address? y/n");
+		while(!in.hasNext("[ynYN]$")){
+			System.out.print("y/n only --> ");
+			in.nextLine();
+		}
+		String isUpdateAddress = in.nextLine();
+    	if(isUpdateAddress.equalsIgnoreCase("y")){
+    		Address updatedAddress = createUpdateAddress(person);
+    		updatedPerson.setAddress(updatedAddress);
+    	}
+		managePersonService.updatePerson(updatedPerson);
+		System.out.println("Person updated succesfully");
 	}
 
 	public void updateAddress(){
 		Scanner in = new Scanner(System.in);
-		System.out.print("Address id... ");
+		System.out.print("Address id --> ");
 		while(!in.hasNextInt()){
-			System.out.print("Invalid... ");
+			System.out.print("Please enter a valid id --> ");
 			in.next();
 		}
 		int id = in.nextInt();
-		Address address = addAddress();
+		Address address = createAddress();
 		address.setId(id);
 		managePersonService.updateAddress(address);
+		System.out.println("Address updated succesfully");
 	}
 
 	public void deletePersonById(){
 		Scanner in = new Scanner(System.in);
-		System.out.print("Person id... ");
+		System.out.print("Person id --> ");
 		while(!in.hasNextInt()){
-			System.out.print("Invalid... ");
+			System.out.print("Please enter a valid id --> ");
 			in.next();
 		}
 		int id = in.nextInt();
 		managePersonService.deletePersonById(id);
+		System.out.println("Person deleted succesfully");
 	}
 
 	public void deleteContactById() {
 		Scanner in = new Scanner(System.in);
-		System.out.print("Contact id... ");
+		System.out.print("Contact id --> ");
 		while(!in.hasNextInt()){
 			in.nextInt();
 		}
 		int id = in.nextInt();
 		managePersonService.deleteContactById(id);
+		System.out.println("Contact deleted succesfully");
 	}
 
 	public void personsGui(List<Person> persons) {
-		System.out.println(String.format("%-5s%-30s%-10s%-12s%-13s%-10s%-6s%-7s%1s","+----","+-----------------------------","+---------","+-----------","+------------","+---------","+-----","+------","+"));
-		System.out.println(String.format("%-5s%-30s%-10s%-12s%-13s%-10s%-6s%-7s%1s","|id","|full_name","|gender","|birthdate","|address_id","|employed","|gwa","|role","|"));
-		System.out.println(String.format("%-5s%-30s%-10s%-12s%-13s%-10s%-6s%-7s%1s","+----","+-----------------------------","+---------","+-----------","+------------","+---------","+-----","+------","+"));
+		System.out.println(String.format("%-5s%-30s%-10s%-20s%-13s%-10s%-6s%-7s%1s","+----","+-----------------------------","+---------","+-------------------","+------------","+---------","+-----","+------","+"));
+		System.out.println(String.format("%-5s%-30s%-10s%-20s%-13s%-10s%-6s%-7s%1s","|id","|full_name","|gender","|birthdate","|address_id","|employed","|gwa","|role","|"));
+		System.out.println(String.format("%-5s%-30s%-10s%-20s%-13s%-10s%-6s%-7s%1s","+----","+-----------------------------","+---------","+-------------------","+------------","+---------","+-----","+------","+"));
+		String date = null;
 		for (Person p : persons){
-			System.out.println(String.format("%-5s%-30s%-10s%-12s%-13s%-10s%-6s%-7s%1s","|"+p.getId(),"|"+p.getFullName(),"|"+p.getGender(),"|"+p.getBirthdate(),"|"+p.getAddress().getId(),"|"+p.isEmployed(),"|"+p.getGwa(),"|"+p.getRole(),"|"));
+			date = new SimpleDateFormat("MMMM-dd-yyyy").format(p.getBirthdate());
+			System.out.println(String.format("%-5s%-30s%-10s%-20s%-13s%-10s%-6s%-7s%1s","|"+p.getId(),"|"+p.getFullName(),"|"+p.getGender(),"|"+date,"|"+p.getAddress().getId(),"|"+p.isEmployed(),"|"+p.getGwa(),"|"+p.getRole(),"|"));
 		}
-		System.out.println(String.format("%-5s%-30s%-10s%-12s%-13s%-10s%-6s%-7s%1s","+----","+-----------------------------","+---------","+-----------","+------------","+---------","+-----","+------","+"));
+		System.out.println(String.format("%-5s%-30s%-10s%-20s%-13s%-10s%-6s%-7s%1s","+----","+-----------------------------","+---------","+-------------------","+------------","+---------","+-----","+------","+"));
 	}
 
 	public void addressGui(Address a) {
@@ -264,10 +384,6 @@ public class AppManager {
 			System.out.println(String.format("%-5s%-10s%-20s%-5s%1s","|"+c.getId(),"|"+c.getType(),"|"+c.getValue(),"|"+c.getPerson().getId(),"|"));	
 		}
 		System.out.println(String.format("%-5s%-10s%-20s%-5s%1s","+----","+---------","+-------------------","+----","+"));
-	}
-
-	public void savePerson(Person person){
-		managePersonService.addPerson(person);
 	}
 
 	public Gender convertToGenderEnum(String val){

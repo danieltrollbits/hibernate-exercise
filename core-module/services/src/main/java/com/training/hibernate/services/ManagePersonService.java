@@ -27,8 +27,8 @@ public class ManagePersonService {
 		return p.getPersonByLastName(name);
 	}
 
-	public void updatePersonLastName(int id, String name){
-		p.updatePersonLastName(id,name);
+	public void updatePerson(Person person){
+		p.updatePerson(person);
 	}
 
 	public void deletePersonById(int id){

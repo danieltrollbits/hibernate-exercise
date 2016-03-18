@@ -43,5 +43,9 @@ public class Contact {
 
 	public void setPerson(Person person){
 		this.person = person;
-	}	
+	}
+
+	public String toString(){
+		return this.type + ": " + this.value;
+	}
 }

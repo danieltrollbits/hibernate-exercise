@@ -28,5 +28,10 @@
       <artifactId>infra-module</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.training.hibernate</groupId>
+      <artifactId>util</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 </project>

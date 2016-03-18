@@ -30,7 +30,7 @@ public class App {
 		        case 6: appManager.addContactByPersonId();
 		        	appManager.next();
 		        	break;
-		        case 7: appManager.updatePersonLastName();
+		        case 7: appManager.updatePerson();
 		        	appManager.next();
 		        	break;
 		        case 8: appManager.updateAddress();
