@@ -76,7 +76,6 @@ public class PersonDao {
 			}
 			e.printStackTrace();
 		}finally{
-			session.flush();
 			session.close();
 		}
 	}
@@ -92,7 +91,6 @@ public class PersonDao {
 			if (tx!=null) tx.rollback();
 			e.printStackTrace();
 		}finally {
-			session.flush();
 			session.close();
 		}
 	}

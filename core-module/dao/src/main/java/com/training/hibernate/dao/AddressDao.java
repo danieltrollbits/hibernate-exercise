@@ -20,7 +20,6 @@ public class AddressDao {
 			if (tx!=null) tx.rollback();
 			e.printStackTrace();
 		}finally {
-			session.flush();
 			session.close();
 		}
 		return address;
@@ -56,7 +55,6 @@ public class AddressDao {
 			if (tx!=null) tx.rollback();
 			e.printStackTrace();
 		}finally {
-			session.flush();
 			session.close();	
 		}
 	}

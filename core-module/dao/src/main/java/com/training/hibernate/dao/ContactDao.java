@@ -22,7 +22,6 @@ public class ContactDao {
 		}catch(RuntimeException e){
 			e.printStackTrace();
 		}finally{
-			session.flush();
 			session.close();
 		}
 	}
